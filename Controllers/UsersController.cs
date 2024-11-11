@@ -23,18 +23,6 @@ namespace HovedOpgaveWebAPI.Controllers
             return Ok(users);
         }
 
-        // GET: api/users/by-username/{username}
-        [HttpGet("by-username/{username}")]
-        public ActionResult<IEnumerable<User>> GetSpeceficUsername(string username)
-        {
-            var user = users.FirstOrDefault(u => u.Name == username);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
-        }
-
         // GET: api/users/{id}
         [HttpGet("{id}")]
         public ActionResult<User> GetUser(int id)
