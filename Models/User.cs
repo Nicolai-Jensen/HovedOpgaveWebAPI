@@ -1,10 +1,11 @@
 namespace HovedOpgaveWebAPI.Models
 {
-    public class User
+    public class UserDetails
     {
-        public int Id {get; set; }
-        public required string Name { get; set; }
-        public int Age { get; set; }
         public required string Gender { get; set; }
+        public int Volume { get; set; }
+        public decimal Money { get; set; }
+        public int Chips { get; set; }
+        public List<string> RewardNames { get; set; } = new List<string>();
     }
 }
