@@ -9,55 +9,50 @@ namespace HovedOpgaveWebAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        // Temporary in-memory list to store users
-        private static List<User> users = new List<User>
+        // Temporary in-memory Dictionary to store users
+        private static Dictionary<int, UserDetails> users = new Dictionary<int, UserDetails>
         {
-            new User { Id = 1, Name = "Jane", Age = 30, Gender = "Female" },
-            new User { Id = 2, Name = "John", Age = 25, Gender = "Male" }
+            { 1, new UserDetails { Gender = "Female", Volume = 10, Money = 100.50m, Chips = 5, RewardNames = new List<string> { "Reward1", "Reward2" } } },
+            { 2, new UserDetails { Gender = "Male", Volume = 20, Money = 150.00m, Chips = 3, RewardNames = new List<string> { "Reward3" } } }
         };
 
         // GET: api/users
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public ActionResult<Dictionary<int, UserDetails>> GetUsers()
         {
             return Ok(users);
         }
 
         // GET: api/users/{id}
         [HttpGet("{id}")]
-        public ActionResult<User> GetUser(int id)
+        public ActionResult<UserDetails> GetUser(int id)
         {
-            var user = users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
+            if (users.TryGetValue(id, out var userDetails))
             {
-                return NotFound();
+                return Ok(userDetails);
             }
-            return Ok(user);
+            return NotFound();
         }
 
         // POST: api/users
         [HttpPost]
-        public ActionResult<User> CreateUser(User newUser)
+        public ActionResult<UserDetails> CreateUser(UserDetails newUser)
         {
-            newUser.Id = users.Count > 0 ? users.Max(u => u.Id) + 1 : 1;
-            users.Add(newUser);
-            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
+            int newId = users.Count > 0 ? users.Keys.Max() + 1 : 1;
+            users[newId] = newUser;
+            return CreatedAtAction(nameof(GetUser), new { id = newId }, newUser);
         }
 
         // PUT: api/users/{id}
         [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, User updatedUser)
+        public ActionResult UpdateUser(int id, UserDetails updatedUser)
         {
-            var user = users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
+            if (!users.ContainsKey(id))
             {
                 return NotFound();
             }
 
-            user.Name = updatedUser.Name;
-            user.Age = updatedUser.Age;
-            user.Gender = updatedUser.Gender;
-
+            users[id] = updatedUser;
             return NoContent();
         }
 
@@ -65,13 +60,12 @@ namespace HovedOpgaveWebAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
-            var user = users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
+            if (!users.ContainsKey(id))
             {
                 return NotFound();
             }
 
-            users.Remove(user);
+            users.Remove(id);
             return NoContent();
         }
     }
