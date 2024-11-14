@@ -21,7 +21,6 @@ COPY --from=build /app/out ./
 
 # Expose the port your application will run on
 EXPOSE 5134
-EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:5134
 
 # Start the application
