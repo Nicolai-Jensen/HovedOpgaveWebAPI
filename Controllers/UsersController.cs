@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using HovedOpgaveWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace HovedOpgaveWebAPI.Controllers
 {
@@ -18,9 +19,10 @@ namespace HovedOpgaveWebAPI.Controllers
 
         // GET: api/users
         [HttpGet]
-        public ActionResult<Dictionary<int, UserDetails>> GetUsers()
+        public ActionResult<string> GetUsers()
         {
-            return Ok(users);
+            var json = JsonConvert.SerializeObject(users);
+            return Ok(json);
         }
 
         // GET: api/users/{id}
