@@ -38,11 +38,18 @@ namespace HovedOpgaveWebAPI.Controllers
 
         // POST: api/users
         [HttpPost]
-        public ActionResult<UserDetails> CreateUser(UserDetails newUser)
+        public ActionResult<CreateUserResponse> CreateUser(UserDetails newUser)
         {
             int newId = users.Count > 0 ? users.Keys.Max() + 1 : 1;
             users[newId] = newUser;
-            return CreatedAtAction(nameof(GetUser), new { id = newId }, newUser);
+
+            var response = new CreateUserResponse
+            {
+                Id = newId,
+                User = newUser 
+            };
+
+            return CreatedAtAction(nameof(GetUser), new { id = newId }, response);
         }
 
         // PUT: api/users/{id}
@@ -70,5 +77,13 @@ namespace HovedOpgaveWebAPI.Controllers
             users.Remove(id);
             return NoContent();
         }
+        
     }
+
+    public class CreateUserResponse
+    {
+        public int Id { get; set; }
+        public UserDetails? User { get; set; }  // Nullable to avoid initialization warnings
+    }
+
 }
