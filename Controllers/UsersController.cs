@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using HovedOpgaveWebAPI.Models;
+using HovedOpgaveWebAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace HovedOpgaveWebAPI.Controllers
 {
@@ -10,80 +13,80 @@ namespace HovedOpgaveWebAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        // Temporary in-memory Dictionary to store users
-        private static Dictionary<int, UserDetails> users = new Dictionary<int, UserDetails>
+        private readonly ApplicationDbContext _context;
+
+        public UsersController(ApplicationDbContext context)
         {
-            { 1, new UserDetails { Gender = "Female", Volume = 10, Money = 100.50m, Chips = 5, RewardNames = new List<string> { "Reward1", "Reward2" } } },
-            { 2, new UserDetails { Gender = "Male", Volume = 20, Money = 150.00m, Chips = 3, RewardNames = new List<string> { "Reward3" } } }
-        };
+            _context = context;
+        }
 
         // GET: api/users
         [HttpGet]
-        public ActionResult<string> GetUsers()
+        public async Task<ActionResult<IEnumerable<GameData>>> GetUsers()
         {
-            var json = JsonConvert.SerializeObject(users);
-            return Ok(json);
+            var gameData = await _context.GameData.ToListAsync();
+            return Ok(gameData);
         }
 
         // GET: api/users/{id}
         [HttpGet("{id}")]
-        public ActionResult<UserDetails> GetUser(int id)
+        public async Task<ActionResult<GameData>> GetUser(int id)
         {
-            if (users.TryGetValue(id, out var userDetails))
+            var gameData = await _context.GameData.FindAsync(id);
+            if (gameData == null)
             {
-                return Ok(userDetails);
+                return NotFound();
             }
-            return NotFound();
+            return Ok(gameData);
         }
 
         // POST: api/users
         [HttpPost]
-        public ActionResult<CreateUserResponse> CreateUser(UserDetails newUser)
+        public async Task<ActionResult<GameData>> CreateUser([FromBody] string body)
         {
-            int newId = users.Count > 0 ? users.Keys.Max() + 1 : 1;
-            users[newId] = newUser;
-
-            var response = new CreateUserResponse
+            var newGameData = new GameData
             {
-                Id = newId,
-                User = newUser 
+                GameId = 1, 
+                Body = body 
             };
 
-            return CreatedAtAction(nameof(GetUser), new { id = newId }, response);
+            _context.GameData.Add(newGameData);
+            
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetUser), new { id = newGameData.UserId }, newGameData);
         }
 
         // PUT: api/users/{id}
         [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, UserDetails updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] string body)
         {
-            if (!users.ContainsKey(id))
+            var gameData = await _context.GameData.FindAsync(id);
+
+            if (gameData == null)
             {
                 return NotFound();
             }
 
-            users[id] = updatedUser;
+            gameData.Body = body;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // DELETE: api/users/{id}
         [HttpDelete("{id}")]
-        public ActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            if (!users.ContainsKey(id))
+            var gameData = await _context.GameData.FindAsync(id);
+            if (gameData == null)
             {
                 return NotFound();
             }
 
-            users.Remove(id);
+            _context.GameData.Remove(gameData);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
-        
     }
-
-    public class CreateUserResponse
-    {
-        public int Id { get; set; }
-        public UserDetails? User { get; set; }  // Nullable to avoid initialization warnings
-    }
-
 }
