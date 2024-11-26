@@ -11,8 +11,8 @@ namespace HovedOpgaveWebAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GameData>().HasKey(g => g.UserId); 
-            modelBuilder.Entity<GameData>().Property(g => g.Body).HasColumnType("jsonb");
+            modelBuilder.Entity<GameData>()
+                .HasKey(g => new { g.UserId, g.GameId }); // Composite key
         }
     }
 }
