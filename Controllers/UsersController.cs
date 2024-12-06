@@ -28,7 +28,7 @@ namespace HovedOpgaveWebAPI.Controllers
             return Ok(gameData);
         }
 
-        // GET: api/users/{id}
+        // GET: api/users/{id}/{gameid}
         [HttpGet("{userId}/{gameId}")]
         public async Task<ActionResult<GameData>> GetUser(string userId, string gameId)
         {
@@ -65,7 +65,7 @@ namespace HovedOpgaveWebAPI.Controllers
             return CreatedAtAction(nameof(GetUser), new { userId = newGameData.UserId, gameId = newGameData.GameId }, newGameData);
         }
 
-        // PUT: api/users/{id}
+        // PUT: api/users/{Id}/{gameId}
         [HttpPut("{userId}/{gameId}")]
         public async Task<IActionResult> UpdateUser(string userId, string gameId, [FromBody] string body)
         {
