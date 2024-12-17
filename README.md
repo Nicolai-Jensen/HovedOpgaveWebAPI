@@ -11,7 +11,7 @@ body (string, ofte JSON-struktur).</p>
 Sørg for, at userId og gameId altid er korrekt defineret i relevante requests.
 
 <h3>Commands til at få det op at køre i docker:</h3>
-- Download Git reppository
+* Download Git reppository
 - Open folder with VSC or not just easier
 - Run the following commands:
   - docker build -t hovedopgavewebapi . || docker build -t "NameOfImage" .  
