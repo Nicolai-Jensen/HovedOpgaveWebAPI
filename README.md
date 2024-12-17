@@ -10,6 +10,16 @@ gameId (string),
 body (string, ofte JSON-struktur).</p>
 Sørg for, at userId og gameId altid er korrekt defineret i relevante requests.
 
+<h3>Commands til at få det op at køre i docker:</h3>
+- Download Git reppository
+- Open folder with VSC or not just easier
+- Run the following commands:
+  - docker build -t hovedopgavewebapi . || docker build -t "NameOfImage" .  
+  - docker run -d --network app-network -p 5134:5134 --name TestAPI hovedopgavewebapi || docker run -d --network app-network -p 5134:5134 --name "NameOfContainer" "NameOfImage"
+
+Command to set up a new network bridge in docker
+- docker network create -d bridge "network_name"
+
 <div class="section">
     <h2>Endpoint 1: Get Data</h2>
     <p><strong>Description:</strong> Denne Endpoint henter alt data fra databasens GameData tabel.</p>
