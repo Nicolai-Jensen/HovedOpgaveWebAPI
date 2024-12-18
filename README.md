@@ -13,10 +13,10 @@ Sørg for, at userId og gameId altid er korrekt defineret i relevante requests.
 <h3>Commands til at få det op at køre i docker:</h3>
 
 - Download Git reppository
-- Open folder with VSC or not just easier
+- Open folder with Visual Studio or not, just easier
 - Run the following commands:
-  - docker build -t hovedopgavewebapi . || docker build -t "NameOfImage" .  
-  - docker run -d --network app-network -p 5134:5134 --name TestAPI hovedopgavewebapi || docker run -d --network app-network -p 5134:5134 --name "NameOfContainer" "NameOfImage"
+  - docker build -t hovedopgavewebapi . <h4>or</h4> docker build -t "NameOfImage" .  
+  - docker run -d --network app-network -p 5134:5134 --name TestAPI hovedopgavewebapi <h4>or</h4> docker run -d --network app-network -p 5134:5134 --name "NameOfContainer" "NameOfImage"
 
 Command to set up a new network bridge in docker
 - docker network create -d bridge "network_name"
