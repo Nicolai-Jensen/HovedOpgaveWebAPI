@@ -1,5 +1,3 @@
-# https://medium.com/@jaydeepvpatil225/containerization-of-the-net-core-7-web-api-using-docker-3abdd543f78a
-# https://stackoverflow.com/questions/72817377/how-to-run-a-net-core-web-api-locally-on-docker
 # Use the official .NET Core SDK as a parent image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
